@@ -6,9 +6,9 @@
 
 void clock(void){
   digitalWrite(CLOCK,0);
-  delay(10);
+  delay(100);
   digitalWrite(CLOCK,1);
-  delay(10);
+  delay(100);
   digitalWrite(CLOCK,0);
 
 }
@@ -25,7 +25,7 @@ void strobe(void){
   {
     unsigned char j;
     unsigned char tmp;
-    for (j=0; j >= 7; j++)
+    for (j=0; j <= 7; j++)
     {
       tmp = k & (MASK>>j);
       if (tmp)
@@ -56,10 +56,15 @@ void setup(){
 pinMode(DATA,OUTPUT);
 pinMode(CLOCK,OUTPUT);
 pinMode(STB,OUTPUT);
+digitalWrite(DATA, 0);
+digitalWrite(CLOCK, 0);
+digitalWrite(STB, 0);
+
 
 }
 void loop(){
   unsigned char i = 57;
   converteToHex(i);
+  delay(1000);
 
 }
