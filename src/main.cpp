@@ -3,6 +3,14 @@
 #define CLOCK 9
 #define STB 8
 #define MASK 0X80
+#define ponto 7
+#define ad 0
+#define Vmax 5.0
+#define Resolucao 1024
+
+//#define AD 36 //colocar porta do esp
+//#define Vmax 3.3 //tensao maxima esp
+//#define Resolucao 4096
 
 void clock(void){
   digitalWrite(CLOCK,0);
@@ -20,51 +28,97 @@ void strobe(void){
   digitalWrite(STB,0);
 
 }
-  void enviaSerial_4094(unsigned char k)
+  void enviaSerial_4094(unsigned int k)
 
   {
     unsigned char j;
-    unsigned char tmp;
-    for (j=0; j <= 7; j++)
+    unsigned int tmp;
+    for (j=0; j <= 15; j++)
     {
       tmp = k & (MASK>>j);
-      if (tmp)
+      if (tmp){
               digitalWrite(DATA,1);
-      else
+              Serial.print(1);
+      }
+      else{
               digitalWrite(DATA,0);
+              Serial.print(0);
+    }
       clock();
     
     }
+              Serial.println("");
+
     strobe();
   }
 
-void converteToHex(unsigned char m){
-  unsigned char aux;
-  unsigned char dezena;
-  unsigned char unidade;
+void converteToHex(unsigned int m){
+
+ // char buf[10];
+
+  unsigned int aux;
+  unsigned int tmp;
+  unsigned int milhar;
+  unsigned int centena;
+  unsigned int dezena;
+  unsigned int unidade;
+
+  milhar = m/1000;
+  aux = m % 1000;
+  centena = aux/100;
 
   dezena = m/10;
   unidade = m%10;
+ // Serial.println(milhar);
+  //Serial.println(centena);
+  //Serial.println(dezena);
+  //Serial.println(unidade);
 
-  aux = dezena <<4 | unidade;
+tmp=(milhar<<12) | (centena<<8)|(dezena<<4)|unidade;
+// sprintf(buf, "%X4 -- %d",tmp, tmp);
 
-  enviaSerial_4094(aux);
+ // Serial.print("Hexadecimal=");
+  //Serial.println(buf);
+  enviaSerial_4094(tmp);
    
 }
 
 void setup(){
+Serial.begin(9600);
+
 pinMode(DATA,OUTPUT);
 pinMode(CLOCK,OUTPUT);
 pinMode(STB,OUTPUT);
+pinMode(ponto, OUTPUT);
+
 digitalWrite(DATA, 0);
 digitalWrite(CLOCK, 0);
 digitalWrite(STB, 0);
+digitalWrite(ponto, 0);
 
 
 }
 void loop(){
-  unsigned char i = 57;
-  converteToHex(i);
-  delay(1000);
+unsigned int leitura;
+  float voltimetro;
+ 
+
+
+  leitura = analogRead(AD);
+  int ValorLido;
+
+  voltimetro = (leitura * (3.3/1024));
+ValorLido = voltimetro*100;
+
+  Serial.println(ValorLido);
+
+
+
+ // unsigned int i = 2457;
+  converteToHex(ValorLido);
+  digitalWrite(ponto, 1);
+    delay(10);
+ // Serial.println(i);
+ // delay(1000);
 
 }
