@@ -4,13 +4,9 @@
 #define STB 8
 #define MASK 0X80
 #define ponto 7
-#define ad 0
-#define Vmax 5.0
-#define Resolucao 1024
-
-//#define AD 36 //colocar porta do esp
-//#define Vmax 3.3 //tensao maxima esp
-//#define Resolucao 4096
+#define AD 36 
+#define Vmax 3.3 
+#define Resolucao 4096
 
 void clock(void){
   digitalWrite(CLOCK,0);
